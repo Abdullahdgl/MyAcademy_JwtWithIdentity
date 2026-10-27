@@ -1,17 +1,21 @@
 ﻿using JwtProject.API.Dtos.UserDtos;
 using JwtProject.API.Entites;
+using JwtProject.API.Options;
 using JwtProject.API.Services;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 
 namespace JwtProject.API.Controllers
 {
 	[Route("api/[controller]")]
 	[ApiController]
 	public class UsersController(UserManager<AppUser> _userManager,
-		IJwtService _jwtService) : ControllerBase
+		IJwtService _jwtService, IOptions<JwtOptions> jwtOptions) : ControllerBase
 	{
+
+		private readonly JwtOptions _jwtOptions = jwtOptions.Value;
+
 		[HttpPost("register")]
 		public async Task<IActionResult> Register(RegisterUserDto model)
 		{
@@ -53,7 +57,9 @@ namespace JwtProject.API.Controllers
 			}
 
 			var token = await _jwtService.GenerateTokenAsync(user);
-			return Ok(new { token = token });
+			return Ok(new { Token = token, ExpireTime=DateTime.Now.AddMinutes(_jwtOptions.ExpireInMinutes) });
 		}
+
+		
 	}
 }
