@@ -24,9 +24,9 @@ namespace JwtProject.API.Services
 			var claims = new List<Claim>
 			{
 				
-				new Claim(ClaimTypes.Name, user.UserName),
-				new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-				new Claim(ClaimTypes.Email, user.Email)
+				new Claim("userName", user.UserName),
+				new Claim("id", user.Id.ToString()),
+				new Claim("email", user.Email)
 			};
 
 
